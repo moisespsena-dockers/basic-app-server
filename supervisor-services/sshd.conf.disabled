@@ -1,0 +1,8 @@
+[program:sshd]
+command=/usr/sbin/sshd -D -e
+autorestart=true
+startretries=3
+stderr_logfile=/var/log/supervisor/%(program_name)s_stderr.log
+stderr_logfile_maxbytes=10MB
+stdout_logfile=/var/log/supervisor/%(program_name)s_stdout.log
+stdout_logfile_maxbytes=10MB
