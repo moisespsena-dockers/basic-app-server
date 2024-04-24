@@ -17,7 +17,7 @@ build_httpdx:
 
 docker_deps: build_httpdx
 
-docker_build: docker_deps
+docker_build:
 	$(DOCKER_CMD) build --build-arg HTTPDX_PORT=$(HTTPDX_PORT) --tag ${tag}:${GIT_HASH} .
 
 docker_run:

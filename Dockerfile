@@ -1,7 +1,7 @@
 FROM postgres:16-bullseye
 
-ARG ROOT_PASSWORD="@changeme!"
-ARG APP_PASSWORD="@changeme!"
+ARG ROOT_PASSWORD="changeme"
+ARG APP_PASSWORD="changeme"
 ARG APP_UID=1000
 ARG SSHD_PORT=22
 ARG HTTPDX_PORT=80
@@ -14,8 +14,6 @@ RUN set -eux; \
     mkdir -p /data/etc; \
     mv /root /data/root; \
     ln -s /data/root /root; \
-    mv /etc/passwd /data/etc/passwd; \
-    ln /data/etc/passwd /etc/passwd; \
     mkdir /data/etc/httpdx; \
     httpdx create-config -server-addr $HTTPDX_PORT -out "/data/etc/httpdx/httpdx.yml"; \
     apt update; \
