@@ -1,6 +1,6 @@
 DOCKER_CMD ?= docker
 DOCKER_USERNAME ?= moisespsena
-APPLICATION_NAME ?= debian-bullseye-basic-server
+APPLICATION_NAME ?= basic-app-server
 ADDR ?= ":10000"
 HTTPDX_PORT ?= 80
 GIT_HASH ?= $(shell git log --date=format:'%Y%m%d%H%M%S' --format="%h-%cd" -n 1)
