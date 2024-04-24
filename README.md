@@ -1,2 +1,2 @@
-# debian-bullseye-basic-server
-Basic Debian Bullseye server
+# basic-app-server
+Basic Application Server
