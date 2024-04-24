@@ -1,0 +1,11 @@
+#!/bin/bash
+__passwd.original "$@"
+s=$?
+if [ $s -eq 0 ]; then
+  if [ -f /etc/shadow ]; then
+    mv /etc/shadow /data/etc/shadow && \
+      ln -s /data/etc/shadow /etc/shadow
+    s=$?
+  fi
+fi
+exit $s

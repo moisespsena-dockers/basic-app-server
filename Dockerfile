@@ -56,7 +56,11 @@ RUN set -eux; \
     ln -s /data/etc/supervisor/conf.d /etc/supervisor/conf.d; \
     mkdir -p /data/var/lib/postgresql; \
     mv /var/lib/postgresql/data /data/var/lib/postgresql; \
-    ln -s /data/var/lib/postgresql/data /var/lib/postgresql/data
+    ln -s /data/var/lib/postgresql/data /var/lib/postgresql/data; \
+    mv /usr/bin/passwd /usr/bin/__passwd.original; \
+    mv /bin/__passwd /usr/bin/passwd; \
+    mv /etc/shadow /data/etc/shadow; \
+    ln -s /data/etc/shadow /etc/shadow
 
 ADD supervisor-services/ /data/etc/supervisor/conf.d/
 
