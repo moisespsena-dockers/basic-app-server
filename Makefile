@@ -21,13 +21,10 @@ docker_build: docker_deps
 	$(DOCKER_CMD) build --build-arg HTTPDX_PORT=$(HTTPDX_PORT) --tag ${tag}:${GIT_HASH} .
 
 docker_run:
-	$(DOCKER_CMD) run -v debian-bullseye-basic-server_data:/data -e POSTGRES_PASSWORD=password -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH}
+	$(DOCKER_CMD) run -v basic-app-server_data:/data -e POSTGRES_PASSWORD=password -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH}
 
 docker_shell:
-	$(DOCKER_CMD) run -it -v debian-bullseye-basic-server_data:/data -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH} bash
-
-docker_exec:
-	$(DOCKER_CMD) exec -it ${tag}:${GIT_HASH} bash
+	$(DOCKER_CMD) run -it -v basic-app-server_data:/data -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH} bash
 
 docker_push: docker_build
 	$(DOCKER_CMD) push ${tag}:${GIT_HASH}
