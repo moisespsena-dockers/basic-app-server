@@ -1,6 +1,6 @@
 DOCKER_CMD ?= docker
 DOCKER_USERNAME ?= moisespsena
-APPLICATION_NAME ?= basic-app-server
+APPLICATION_NAME ?= minimal-server
 ADDR ?= ":10000"
 HTTPDX_PORT ?= 80
 GIT_HASH ?= $(shell git log --date=format:'%Y%m%d%H%M%S' --format="%h-%cd" -n 1)
@@ -19,6 +19,7 @@ docker_deps: build_httpdx
 
 docker_build:
 	$(DOCKER_CMD) build --build-arg HTTPDX_PORT=$(HTTPDX_PORT) --tag ${tag}:${GIT_HASH} .
+	$(DOCKER_CMD) tag  ${tag}:${GIT_HASH} ${tag}:latest
 
 docker_run:
 	$(DOCKER_CMD) run -v basic-app-server_data:/data -e POSTGRES_PASSWORD=password -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH}

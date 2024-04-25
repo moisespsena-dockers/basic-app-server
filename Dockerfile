@@ -10,6 +10,8 @@ USER root
 
 ADD bin/ /bin/
 
+WORKDIR /
+
 RUN set -eux; \
     mkdir -p /data/etc; \
     mv /root /data/root; \
@@ -50,24 +52,28 @@ RUN set -eux; \
         su - app -c 'set -eux; mkdir .ssh; chmod 700 .ssh; ssh-keygen -q -t rsa -N "" -f .ssh/id_rsa'; \
     fi; \
     mkdir /var/log/sshd; \
-    mkdir /var/log/ssh; \
+    mkdir /var/log/ssh;
+
+
+RUN set -eux; \
     mkdir -p /data/etc/supervisor; \
     mv /etc/supervisor/conf.d /data/etc/supervisor/conf.d; \
     ln -s /data/etc/supervisor/conf.d /etc/supervisor/conf.d; \
     mkdir -p /data/var/lib/postgresql; \
-    mv /var/lib/postgresql/data /data/var/lib/postgresql; \
     ln -s /data/var/lib/postgresql/data /var/lib/postgresql/data; \
     mv /usr/bin/passwd /usr/bin/__passwd.original; \
     mv /bin/__passwd /usr/bin/passwd; \
+    mv /usr/sbin/chpasswd /usr/sbin/__chpasswd.original; \
+    mv /bin/__chpasswd /usr/sbin/chpasswd; \
     mv /etc/shadow /data/etc/shadow; \
-    ln -s /data/etc/shadow /etc/shadow
+    ln -s /data/etc/shadow /etc/shadow;
 
 ADD supervisor-services/ /data/etc/supervisor/conf.d/
+ADD entrypoint.sh /usr/local/bin/docker-minimal-server-entrypoint.sh
 
 VOLUME /data
 
 EXPOSE $SSHD_PORT
 EXPOSE $HTTPDX_PORT
 
-ENTRYPOINT []
-CMD ["supervisord", "-n"]
+ENTRYPOINT ["docker-minimal-server-entrypoint.sh"]
