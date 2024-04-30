@@ -102,3 +102,10 @@ variables.
 - If haves a services, puts your supervisor configuration into 
 `/data/etc/supervisor/config.d` and runs `supervisorctl update`.
 - If haves HTTP server, add proxy config in `/data/etc/httpdx/httpdx.yml`.
+
+## Scripts
+
+- `/data/main.sh`: is default command runed by ENTRYPOINT. Edit it to set custom command.
+- `/data/setup.sh`: this command was called by ENTRYPOINT if `/data/.initialized` does not exists.
+  It's a tool to configure your container on first execution or post image updated or same 
+  runs container after deleted `/data/.initialized`. 

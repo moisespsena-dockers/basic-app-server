@@ -15,22 +15,22 @@ build_httpdx:
 		golang:1.22-bullseye \
 		bash -c 'go install -ldflags="-X main.buildTime=$$(date +%s)" github.com/moisespsena-go/httpdx@latest && rm -rf /build/.gocache_docker && mv /go/bin/httpdx /build/httpdx'
 
-docker_deps: build_httpdx
+deps: build_httpdx
 
-docker_build:
+build:
 	$(DOCKER_CMD) build --build-arg HTTPDX_PORT=$(HTTPDX_PORT) --tag ${tag}:${GIT_HASH} .
 	$(DOCKER_CMD) tag  ${tag}:${GIT_HASH} ${tag}:latest
 
-docker_run:
+run:
 	$(DOCKER_CMD) run -v basic-app-server_data:/data -e POSTGRES_PASSWORD=password -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH}
 
-docker_shell:
+shell:
 	$(DOCKER_CMD) run -it -v basic-app-server_data:/data -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH} bash
 
-docker_push: docker_build
+push: build
 	$(DOCKER_CMD) push ${tag}:${GIT_HASH}
 	$(DOCKER_CMD) tag  ${tag}:${GIT_HASH} ${tag}:latest
 
-docker_release: docker_push
+release: push
 	$(DOCKER_CMD) pull ${tag}:${GIT_HASH}
 	$(DOCKER_CMD) push ${tag}:latest

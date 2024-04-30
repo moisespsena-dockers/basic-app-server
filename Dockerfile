@@ -70,10 +70,13 @@ RUN set -eux; \
 
 ADD supervisor-services/ /data/etc/supervisor/conf.d/
 ADD entrypoint.sh /usr/local/bin/docker-minimal-server-entrypoint.sh
+ADD data /data
 
 VOLUME /data
 
 EXPOSE $SSHD_PORT
 EXPOSE $HTTPDX_PORT
+
+ENV PATH="/data/bin:${PATH}"
 
 ENTRYPOINT ["docker-minimal-server-entrypoint.sh"]
