@@ -22,10 +22,10 @@ build:
 	$(DOCKER_CMD) tag  ${tag}:${GIT_HASH} ${tag}:latest
 
 run:
-	$(DOCKER_CMD) run -v basic-app-server_data:/data -e POSTGRES_PASSWORD=password -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH}
+	$(DOCKER_CMD) run -v minimal-server_data:/data -e POSTGRES_PASSWORD=password -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH}
 
 shell:
-	$(DOCKER_CMD) run -it -v basic-app-server_data:/data -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH} bash
+	$(DOCKER_CMD) run -it -v minimal-server_data:/data -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH} bash
 
 push: build
 	$(DOCKER_CMD) push ${tag}:${GIT_HASH}
