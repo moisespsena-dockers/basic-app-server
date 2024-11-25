@@ -21,11 +21,27 @@ build:
 	$(DOCKER_CMD) build --build-arg HTTPDX_PORT=$(HTTPDX_PORT) --tag ${tag}:${GIT_HASH} .
 	$(DOCKER_CMD) tag  ${tag}:${GIT_HASH} ${tag}:latest
 
+build_with_services:
+	$(DOCKER_CMD) build --debug \
+		--build-arg HTTPDX_PORT=$(HTTPDX_PORT) \
+		--build-arg WITH_POSTGRES=1 \
+		--build-arg WITH_SSHD=1 \
+		--build-arg WITH_CRON=1 \
+		--tag ${tag}:${GIT_HASH} .
+	$(DOCKER_CMD) tag  ${tag}:${GIT_HASH} ${tag}:latest
+
 run:
-	$(DOCKER_CMD) run -v minimal-server_data:/data -e POSTGRES_PASSWORD=password -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH}
+	$(DOCKER_CMD) run \
+		--rm \
+		--name ${APPLICATION_NAME}_latest \
+		-e POSTGRES_PASSWORD=password \
+		-p ${ADDR}:${HTTPDX_PORT} \
+		-v ${APPLICATION_NAME}__data:/data \
+		-v ${APPLICATION_NAME}__pgdata:/var/lib/postgresql/data \
+		 ${tag}:latest
 
 shell:
-	$(DOCKER_CMD) run -it -v minimal-server_data:/data -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH} bash
+	$(DOCKER_CMD) run --it --rm --name ${APPLICATION_NAME}_latest -p ${ADDR}:${HTTPDX_PORT} ${tag}:${GIT_HASH} bash
 
 push: build
 	$(DOCKER_CMD) push ${tag}:${GIT_HASH}

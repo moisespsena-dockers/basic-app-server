@@ -6,6 +6,11 @@ ARG APP_UID=1000
 ARG SSHD_PORT=22
 ARG HTTPDX_PORT=80
 
+# enabled default services
+ARG WITH_POSTGRES=0
+ARG WITH_CRON=0
+ARG WITH_SSHD=0
+
 USER root
 
 ADD bin/ /bin/
@@ -59,8 +64,6 @@ RUN set -eux; \
     mkdir -p /data/etc/supervisor; \
     mv /etc/supervisor/conf.d /data/etc/supervisor/conf.d; \
     ln -s /data/etc/supervisor/conf.d /etc/supervisor/conf.d; \
-    mkdir -p /data/var/lib/postgresql; \
-    ln -s /data/var/lib/postgresql/data /var/lib/postgresql/data; \
     mv /usr/bin/passwd /usr/bin/__passwd.original; \
     mv /bin/__passwd /usr/bin/passwd; \
     mv /usr/sbin/chpasswd /usr/sbin/__chpasswd.original; \
@@ -79,4 +82,12 @@ EXPOSE $HTTPDX_PORT
 
 ENV PATH="/data/bin:${PATH}"
 
+RUN set -e; \
+    cd /data/etc/supervisor/conf.d; \
+    echo WITH_POSTGRES=$WITH_POSTGRES WITH_CRON=$WITH_CRON WITH_SSHD=$WITH_SSHD; \
+    [ $WITH_POSTGRES -eq 0 ] || mv -v postgresql.conf.disabled postgresql.conf; \
+    [ $WITH_SSHD -eq 0 ] || mv -v sshd.conf.disabled sshd.conf; \
+    [ $WITH_CRON -eq 0 ] || mv -v cron.conf.disabled cron.conf
+
 ENTRYPOINT ["docker-minimal-server-entrypoint.sh"]
+CMD ["supervisord", "-n"]
