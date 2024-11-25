@@ -1,4 +1,4 @@
-FROM postgres:16-bullseye
+FROM postgres:17-bullseye
 
 ARG ROOT_PASSWORD="changeme"
 ARG APP_PASSWORD="changeme"
