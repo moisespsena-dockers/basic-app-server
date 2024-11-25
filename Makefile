@@ -50,3 +50,5 @@ push: build
 release: push
 	$(DOCKER_CMD) pull ${tag}:${GIT_HASH}
 	$(DOCKER_CMD) push ${tag}:latest
+	$(DOCKER_CMD) tag ${tag}:${GIT_HASH} ${tag}:postgres-17
+	$(DOCKER_CMD) push ${tag}:postgres-17
