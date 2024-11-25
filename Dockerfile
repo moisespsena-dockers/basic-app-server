@@ -35,7 +35,8 @@ RUN set -eux; \
         tree \
         unzip \
         htop \
-        cron; \
+        cron \
+        postgresql-plpython3-17; \
     rm -rf /var/lib/apt/lists/*; \
     mv /usr/local/bin/docker-entrypoint.sh /usr/local/bin/docker-postgresql-entrypoint.sh; \
     if [ ! -e /root/.ssh ]; then \
