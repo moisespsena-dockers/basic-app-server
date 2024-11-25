@@ -90,4 +90,3 @@ RUN set -e; \
     [ $WITH_CRON -eq 0 ] || mv -v cron.conf.disabled cron.conf
 
 ENTRYPOINT ["docker-minimal-server-entrypoint.sh"]
-CMD ["supervisord", "-n"]

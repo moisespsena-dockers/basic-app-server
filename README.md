@@ -4,15 +4,15 @@ Is a Minimal Web Server.
 
 ## Specs
 
-- Debian Bullseye, inherited from [PostgreSQL 16](https://hub.docker.com/layers/library/postgres/16-bullseye);
+- Debian Bullseye, inherited from [PostgreSQL 17](https://hub.docker.com/layers/library/postgres/16-bullseye);
 - Linux users: this server haves two users: `root` and `app`. 
   For change passwords, use `passwd`
 - [HTTPDx](https://github.com/moisespsena-go/httpdx) as HTTP server. See `/data/etc/httpdx/httpdx.conf` configuration file;
-- [PostgreSQL 16](https://hub.docker.com/layers/library/postgres/16-bullseye) as database server. It's disabled by default.
+- [PostgreSQL 17](https://hub.docker.com/layers/library/postgres/16-bullseye) as database server. It's disabled by default.
 
   See to [Postgres Docker HUB Page](https://hub.docker.com/_/postgres) for expanded details.  
 
-  For enable it, run: 
+  For enable it, builds image with `--build-arg WITH_POSTGRES=1` or run: 
   ```bash
   cd /data/etc/supervisor/conf.d
   mv postgresql.conf.disabled postgresql.conf
@@ -21,7 +21,7 @@ Is a Minimal Web Server.
   
 - CRON. It's disabled by default.
 
-  For enable it, run:
+  For enable it, builds image with `--build-arg WITH_CRON=1` or run:
   ```bash
   cd /data/etc/supervisor/conf.d
   mv cron.conf.disabled cron.conf
@@ -30,13 +30,16 @@ Is a Minimal Web Server.
   
 - Open SSH Server (sshd). It's disabled by default.
 
-  For enable it, run:
+  For enable it, builds image with `--build-arg WITH_SSHD=1` or run:
   ```bash
   cd /data/etc/supervisor/conf.d
   mv sshd.conf.disabled sshd.conf
   supervisorctl update # if container is running
   ```
   
+  **WARN:** changes **root** user password using `passwd root` and
+  **app** user password using `passwd app`.
+
   For access SSH server proxified by HTTP websockets, see to HTTPDx
   config in section `server/tcp_sockets`.
 
@@ -79,6 +82,9 @@ Build Arguments:
 - APP_UID=1000
 - SSHD_PORT=22
 - HTTPDX_PORT=80
+- `WITH_POSTGRES=0`: set value to 1 to enable postgres service on build.
+- `WITH_CRON=0`: set value to 1 to enable cron service on build.
+- `WITH_SSHD=0`: set value to 1 to enable sshd service on build.
 
 Example:
 ```bash
@@ -100,7 +106,7 @@ variables.
 
 - To add custom application server, when logged as `app` user, puts contents into `~app/`.
 - If haves a services, puts your supervisor configuration into 
-`/data/etc/supervisor/config.d` and runs `supervisorctl update`.
+`/data/etc/supervisor/conf.d` and runs `supervisorctl update`.
 - If haves HTTP server, add proxy config in `/data/etc/httpdx/httpdx.yml`.
 
 ## Scripts
